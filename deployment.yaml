@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: remoteMongo
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: flask
+    spec:
+      containers:
+      - name: remoteMongo
+        image: kaiserho/k8s:1
+        ports:
+          - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loadBal
+  labels:
+    app: flask
+sepc:
+  ports:
+  - port: 80
+    protocol: TCP
+    name: flask
+  selector:
+    app: flask
+  type: LoadBalancer
